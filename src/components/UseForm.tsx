@@ -1,5 +1,5 @@
 import React from "react";
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 type FormValues = {
     firstName: string,
@@ -10,6 +10,16 @@ type IFormInputs = {
     name: string;
     showAge: boolean,
     age: number;
+}
+
+type HandleSubmitFormValues = {
+    firstName: string,
+    lastName: string,
+    email: string
+}
+
+const sleep = (ms: number) => {
+    return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 export const UseFormComponent = () => {
@@ -67,6 +77,8 @@ export const UseFormComponent = () => {
         </form>
     ) */}
 
+    {/* // #### watch ####
+        
     const { register, handleSubmit, watch, formState: {errors} } = useForm<IFormInputs>();
     const watchShowAge = watch('showAge', false);
     const watchAllFields = watch();
@@ -86,6 +98,33 @@ export const UseFormComponent = () => {
             {watchShowAge && (<input type='number' {...register('age', {min: 50})} />)}
             <input type="submit" />
         </form>
-    )
+    ) */}
+
+    const { register, handleSubmit } = useForm();
+   
+    const onSubmit: SubmitHandler<HandleSubmitFormValues> = async data => {
+        await sleep(2000)
+        if (data.firstName === 'David') {
+            alert(JSON.stringify(data))
+        } else {
+            alert('There is an error')
+        }
+    };
+
+    const onError = () => {
+        console.log('wrong');
+    };
+
+
+
+    return (
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <input {...register('firstName')} />
+            <input {...register('lastName')} />
+            <input type="email" {...register('email')} />
+
+            <input type="submit" />
+        </form>
+    );
 
 }
